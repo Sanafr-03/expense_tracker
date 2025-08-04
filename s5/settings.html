@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="add.html" class="add-btn">+</a>
+        <a href="reports.html" class="nav-item reports">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Settings</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Account Settings</h2>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Email Notifications</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="email-notifications">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Dark Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Currency</span>
+                <select class="styled-select" id="currency-select">
+                    <option value="INR">Indian Rupee (₹)</option>
+                    <option value="USD">US Dollar ($)</option>
+                    <option value="EUR">Euro (€)</option>
+                    <option value="GBP">British Pound (£)</option>
+                    <option value="JPY">Japanese Yen (¥)</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Categories</h2>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Income Categories</span>
+                <button class="styled-btn secondary" id="manage-income-categories">
+                    <i class="fas fa-edit"></i> Manage
+                </button>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Expense Categories</span>
+                <button class="styled-btn secondary" id="manage-expense-categories">
+                    <i class="fas fa-edit"></i> Manage
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Data Management</h2>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Export Data</span>
+                <button class="styled-btn secondary" id="export-data">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Import Data</span>
+                <button class="styled-btn secondary" id="import-data">
+                    <i class="fas fa-upload"></i> Import
+                </button>
+            </div>
+            <div class="settings-item">
+                <span class="settings-label">Reset Data</span>
+                <button class="styled-btn secondary warning" id="reset-data">
+                    <i class="fas fa-trash"></i> Reset
+                </button>
+            </div>
+            
+</div>
+<div class="card help-guide">
+    <div class="card-header">
+        <h2 class="card-title">Expense Tracker Guide</h2>
+    </div>
+    
+    <div class="help-tabs">
+    <button class="help-tab-button active" data-tab="how-to-use">
+      <i class="fas fa-question-circle"></i> How to Use
+    </button>
+    <button class="help-tab-button" data-tab="key-features">
+      <i class="fas fa-star"></i> Key Features
+    </button>
+    <button class="help-tab-button" data-tab="faq">
+      <i class="fas fa-question"></i> FAQ
+    </button>
+  </div>
+
+    <!-- How to Use Section -->
+    <div class="guide-section active" id="how-to-use">
+        <div class="section-header">
+            <i class="fas fa-question-circle"></i>
+            <h3>How to Use</h3>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-plus-circle"></i></div>
+                <div class="step-content">
+                    <h4>Add Transactions</h4>
+                    <p>Click the <span class="highlight">+ button</span> to quickly add income or expenses.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-tags"></i></div>
+                <div class="step-content">
+                    <h4>Categorize</h4>
+                    <p>Organize transactions with custom categories for better tracking.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="step-content">
+                    <h4>Analyze</h4>
+                    <p>Check <span class="highlight">Reports</span> to visualize your spending patterns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+   <div class="guide-section" id="key-features">
+        <div class="section-header">
+            <i class="fas fa-star"></i>
+            <h3>Key Features</h3>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background-color: #f0e6b4;">
+                    <i class="fas fa-exchange-alt" style="color: #b8860b;"></i>
+                </div>
+                <h4>Track Income & Expenses</h4>
+                <p>Monitor all your financial transactions in one place.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background-color: #b4d8f0;">
+                    <i class="fas fa-chart-pie" style="color: #1e90ff;"></i>
+                </div>
+                <h4>Visual Reports</h4>
+                <p>Beautiful charts to understand your spending habits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background-color: #f0b4e0;">
+                    <i class="fas fa-bell" style="color: #9932cc;"></i>
+                </div>
+                <h4>Custom Alerts</h4>
+                <p>Get notified about important financial milestones.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background-color: #b4f0c4;">
+                    <i class="fas fa-cloud-upload-alt" style="color: #228b22;"></i>
+                </div>
+                <h4>Data Backup</h4>
+                <p>Export/Import your data anytime for safekeeping.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="guide-section" id="faq">
+        <div class="section-header">
+            <i class="fas fa-question"></i>
+            <h3>Frequently Asked Questions</h3>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I add a new category?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Go to Settings > Categories and click "Manage" on either Income or Expense categories. Then type your new category name and click Add.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I use this on multiple devices?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Currently data is stored locally in your browser. You can export your data from one device and import it on another.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I change the currency?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Navigate to Settings > Account Settings and select your preferred currency from the dropdown menu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Category Management Modal -->
+<div class="modal" id="categoryModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="categoryModalTitle">Manage Categories</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="add-category-form">
+                <input type="text" id="newCategoryName" placeholder="New category name">
+                <button id="addCategoryBtn" class="styled-btn primary">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+            <ul id="categoryList" class="category-list"></ul>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

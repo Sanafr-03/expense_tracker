@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="add.html" class="add-btn">+</a>
+        <a href="reports.html" class="nav-item reports">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <header class="main-header">
+        <h1 class="app-title">Expense Tracker</h1>
+        <hr class="header-divider">
+    </header>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <div class="current-month">July 2025</div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-container">
+            <div class="summary-card income">
+                <div class="summary-header">
+                    <div class="summary-icon income">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div>
+                        <div class="summary-title">Total Income</div>
+                        <div class="summary-amount" id="income-total">₹0.00</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-card expense">
+                <div class="summary-header">
+                    <div class="summary-icon expense">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div>
+                        <div class="summary-title">Total Expenses</div>
+                        <div class="summary-amount" id="expense-total">₹0.00</div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="summary-card balance">
+                <div class="summary-header">
+                    <div class="summary-icon balance">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div>
+                        <div class="summary-title">Current Balance</div>
+                        <div class="summary-amount" id="balance-total">₹0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Goals Section with Slider -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Financial Goals</h2>
+                <button class="btn btn-secondary" id="add-goal">
+                    <i class="fas fa-plus"></i> Add Goal
+                </button>
+            </div>
+            <div class="goals-slider-container">
+                <div class="goals-slider" id="goals-slider">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="empty-text">No goals set yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Charts - Side by Side -->
+        <div class="dashboard-grid">
+            <div class="chart-card">
+                <div class="card-header">
+                    <h2 class="card-title">Income Overview</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <div class="card-header">
+                    <h2 class="card-title">Expense Overview</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Recent Transactions</h2>
+                <a href="history.html" class="view-all">View All</a>
+            </div>
+            <ul class="transaction-list" id="recent-transactions">
+                <li class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="empty-text">No transactions yet</div>
+                    <button class="btn btn-primary" id="add-first-transaction">
+                        <i class="fas fa-plus"></i> Add Transaction
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Add Goal Modal -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Goal</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label class="form-label">Goal Name</label>
+                    <input type="text" class="form-control" id="goal-name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Target Amount</label>
+                        <input type="number" class="form-control" id="goal-amount" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Date</label>
+                        <input type="date" class="form-control" id="goal-date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="goal-description" rows="3" placeholder="Optional note about this goal"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Goal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Goal Modal -->
+    <div class="modal" id="editGoalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Goal</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="editGoalForm">
+                <input type="hidden" id="edit-goal-id">
+                <div class="form-group">
+                    <label class="form-label">Goal Name</label>
+                    <input type="text" class="form-control" id="edit-goal-name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Target Amount</label>
+                        <input type="number" class="form-control" id="edit-goal-amount" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Current Amount</label>
+                        <input type="number" class="form-control" id="edit-goal-current" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Target Date</label>
+                        <input type="date" class="form-control" id="edit-goal-date" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="edit-goal-description" rows="3" placeholder="Optional note about this goal"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>
