@@ -1,0 +1,381 @@
+
+:root {
+    --primary: #3498db;
+    --primary-light: #5dade2;
+    --secondary: #f39c12;
+    --secondary-light: #f8c471;
+    --accent: #2ecc71;
+    --dark: #2c3e50;
+    --dark-light: #7f8c8d;
+    --light: #ecf0f1;
+    --white: #f8f9fa;
+    --warning: #e74c3c;
+    --dark-bg: #1a252f;
+    --dark-card: #2c3e50;
+    --dark-text: #ecf0f1;
+}
+
+/* Base Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light);
+    margin-left: 80px;
+    transition: all 0.3s ease;
+    color: var(--dark);
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.main-content {
+    padding: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+body.dark-mode .page-title {
+    color: var(--dark-text);
+}
+
+.card {
+    background-color: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .card {
+    background-color: var(--dark-card);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: var(--white);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    height: 100vh;
+    width: 80px;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 100;
+}
+
+body.dark-mode .navbar {
+    background-color: var(--dark-card);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    color: var(--dark-light);
+    text-decoration: none;
+    width: 100%;
+    padding: 15px 0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-item:hover {
+    color: var(--dark);
+}
+
+body.dark-mode .nav-item:hover {
+    color: var(--dark-text);
+}
+
+.nav-item i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-item span {
+    font-size: 12px;
+}
+
+.nav-item.active {
+    color: var(--dark);
+}
+
+body.dark-mode .nav-item.active {
+    color: var(--dark-text);
+}
+
+.nav-item.active i {
+    color: var(--primary);
+}
+
+.nav-item.reports.active i {
+    color: var(--secondary);
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: var(--primary);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+}
+
+.nav-item.active::after {
+    transform: scaleY(1);
+}
+
+.nav-item.reports.active::after {
+    background-color: var(--secondary);
+}
+
+.add-btn {
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    margin: 15px 0;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.add-btn::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    top: -100%;
+    left: 0;
+    transition: all 0.4s ease;
+}
+
+.add-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+.add-btn:hover::before {
+    top: 100%;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        margin-left: 0;
+        padding-bottom: 80px;
+    }
+    
+    .navbar {
+        height: 80px;
+        width: 100%;
+        bottom: 0;
+        top: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0 10px;
+    }
+    
+    .nav-item {
+        margin: 0;
+        padding: 10px 0;
+        flex: 1;
+    }
+    
+    .nav-item i {
+        font-size: 22px;
+    }
+    
+    .nav-item span {
+        font-size: 10px;
+    }
+    
+    .nav-item::after {
+        left: 0;
+        top: auto;
+        bottom: 0;
+        height: 3px;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+    
+    .nav-item.active::after {
+        transform: scaleX(1);
+    }
+    
+    .add-btn {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .add-btn:hover {
+        transform: translateX(-50%) scale(1.1);
+    }
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.notification.success {
+    background-color: #2ecc71;
+}
+
+.notification.error {
+    background-color: #e74c3c;
+}
+
+.notification-icon {
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .notification {
+        left: 20px;
+        right: 20px;
+        width: auto;
+    }
+}
+
+/* Responsive Styles for Navigation Bar */
+@media (max-width: 768px) {
+    body {
+        margin-left: 0;
+        padding-bottom: 100px; /* Increased from 80px to give more space */
+    }
+    
+    .navbar {
+        height: 90px; /* Increased height to accommodate the button */
+        width: 100%;
+        bottom: 0;
+        top: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0 10px;
+        padding-top: 15px; /* Added padding at top */
+    }
+    
+    .nav-item {
+        margin: 0;
+        padding: 10px 0;
+        flex: 1;
+        position: relative;
+        z-index: 1; /* Ensure nav items stay behind the button */
+    }
+    
+    .nav-item i {
+        font-size: 22px;
+    }
+    
+    .nav-item span {
+        font-size: 10px;
+    }
+    
+    .nav-item::after {
+        left: 0;
+        top: auto;
+        bottom: 0;
+        height: 3px;
+        width: 100%;
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+    
+    .nav-item.active::after {
+        transform: scaleX(1);
+    }
+    
+    .add-btn {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        top: -40px; /* Lifted higher */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2; /* Ensure button stays above other elements */
+        box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4); /* More prominent shadow */
+    }
+    
+    .add-btn:hover {
+        transform: translateX(-50%) scale(1.1);
+    }
+
+    /* Add margin to the main content to prevent overlap */
+    .main-content {
+        padding-bottom: 40px;
+    }
+}
