@@ -1,0 +1,911 @@
+/* =============== Base Styles =============== */
+:root {
+  --primary: #3498db;       /* Blue */
+  --primary-light: #5dade2;
+  --primary-dark: #2980b9;
+  --primary-transparent: rgba(52, 152, 219, 0.1);
+  --secondary: #f39c12;     /* Gold */
+  --secondary-light: #f8c471;
+  --secondary-dark: #e67e22;
+  --secondary-transparent: rgba(243, 156, 18, 0.1);
+  --dark: #2c3e50;
+  --dark-light: #7f8c8d;
+  --light: #f8f9fa;
+  --white: #f8f9fa;
+  --border-color: #e1e5eb;
+  --text-color: #2c3e50;
+  --text-light: #7f8c8d;
+  --success: #2ecc71;
+  --success-light: #58d68d;
+  --error: #e74c3c;
+  --error-light: #ec7063;
+}
+
+body.dark-mode {
+  --dark: #1a252f;
+  --dark-light: #95a5a6;
+  --light: #2c3e50;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --text-color: #ecf0f1;
+  --text-light: #bdc3c7;
+}
+
+/* =============== Card & Layout =============== */
+.transaction-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 1;
+}
+
+body.dark-mode .transaction-card {
+  background-color: var(--dark);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.card-pattern {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle at 70% 30%, var(--primary-transparent) 0%, transparent 70%);
+  border-bottom-left-radius: 100%;
+  z-index: -1;
+}
+
+.card-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  transform: rotate(30deg);
+  z-index: -1;
+}
+
+body.dark-mode .card-pattern {
+  background: radial-gradient(circle at 70% 30%, rgba(52, 152, 219, 0.2) 0%, transparent 70%);
+}
+
+body.dark-mode .card-shine {
+  opacity: 0.2;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+  position: relative;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .page-title {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.wallet-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.coin-animation {
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+
+.coin {
+  position: absolute;
+  color: var(--secondary-light);
+  font-size: 1.2rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.coin-1 {
+  top: 0;
+  left: 0;
+  animation-delay: 0s;
+}
+
+.coin-2 {
+  top: 5px;
+  left: 15px;
+  animation-delay: 0.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(10deg);
+  }
+}
+
+/* =============== Type Toggle =============== */
+.type-toggle {
+  display: flex;
+  background-color: var(--light);
+  border-radius: 16px;
+  padding: 8px;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .type-toggle {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.type-toggle-btn {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 2;
+  position: relative;
+  overflow: hidden;
+}
+
+.type-toggle-btn i {
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.toggle-icon {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.type-toggle-btn.income .toggle-icon {
+  color: var(--primary);
+}
+
+.type-toggle-btn.expense .toggle-icon {
+  color: var(--secondary);
+}
+
+.type-toggle-btn.active .toggle-icon {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.type-toggle-btn.income {
+  color: var(--primary);
+}
+
+.type-toggle-btn.expense {
+  color: var(--secondary);
+}
+
+/* Add to your add.css */
+.type-toggle-btn.active {
+    background-color: var(--white);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.type-toggle-btn.income.active {
+    color: var(--primary);
+}
+
+.type-toggle-btn.expense.active {
+    color: var(--secondary);
+}
+
+.type-toggle-btn.active {
+  background-color: var(--white);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+body.dark-mode .type-toggle-btn.active {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.type-toggle-btn.income.active {
+  color: var(--primary-dark);
+}
+
+.type-toggle-btn.expense.active {
+  color: var(--secondary-dark);
+}
+
+.toggle-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.type-toggle-btn.active .particle {
+  animation: particle-pop 0.6s ease-out forwards;
+}
+
+@keyframes particle-pop {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1);
+    opacity: 0;
+  }
+}
+
+.type-toggle-btn.income.active .particle:nth-child(1) {
+  --tx: -10px;
+  --ty: -10px;
+  width: 6px;
+  height: 6px;
+  top: 20%;
+  left: 20%;
+  animation-delay: 0.1s;
+  background-color: var(--primary-light);
+}
+
+.type-toggle-btn.income.active .particle:nth-child(2) {
+  --tx: 10px;
+  --ty: -15px;
+  width: 4px;
+  height: 4px;
+  top: 30%;
+  left: 50%;
+  animation-delay: 0.2s;
+  background-color: var(--primary);
+}
+
+.type-toggle-btn.income.active .particle:nth-child(3) {
+  --tx: -5px;
+  --ty: 5px;
+  width: 5px;
+  height: 5px;
+  top: 60%;
+  left: 30%;
+  animation-delay: 0.3s;
+  background-color: var(--primary-dark);
+}
+
+.type-toggle-btn.expense.active .particle:nth-child(1) {
+  --tx: -15px;
+  --ty: 5px;
+  width: 6px;
+  height: 6px;
+  top: 20%;
+  left: 20%;
+  animation-delay: 0.1s;
+  background-color: var(--secondary-light);
+}
+
+.type-toggle-btn.expense.active .particle:nth-child(2) {
+  --tx: 10px;
+  --ty: 10px;
+  width: 4px;
+  height: 4px;
+  top: 30%;
+  left: 50%;
+  animation-delay: 0.2s;
+  background-color: var(--secondary);
+}
+
+.type-toggle-btn.expense.active .particle:nth-child(3) {
+  --tx: -10px;
+  --ty: -5px;
+  width: 5px;
+  height: 5px;
+  top: 60%;
+  left: 30%;
+  animation-delay: 0.3s;
+  background-color: var(--secondary-dark);
+}
+
+/* =============== Updated Form Elements =============== */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-light);
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.form-control {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+}
+
+body.dark-mode .form-control {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Hide number input arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Smaller description box */
+textarea.form-control {
+  min-height: 80px;
+  resize: vertical;
+  padding: 1rem 1.25rem;
+}
+
+/* =============== Enhanced Input Groups =============== */
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+body.dark-mode .input-group {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.input-group:hover {
+  border-color: var(--primary-light);
+}
+
+.input-group-text {
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  color: var(--text-light);
+  background-color: transparent;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-right: 2px solid var(--border-color);
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .input-group {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .input-group-text {
+  color: var(--light);
+  border-right-color: rgba(255, 255, 255, 0.2);
+}
+
+.input-group:hover .input-group-text {
+  color: var(--primary);
+}
+
+.currency-input .input-group-text {
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.date-input .input-group-text {
+  color: var(--primary);
+}
+
+.category-input .input-group-text {
+  color: var(--secondary-dark);
+}
+
+.note-input .input-group-text {
+  color: var(--primary-dark);
+  align-items: flex-start;
+  padding-top: 1rem;
+}
+
+.input-group .form-control {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  padding-left: 1.25rem;
+  box-shadow: none;
+}
+
+/* Floating label effect */
+.form-group.focused .form-label,
+.form-control:focus + .form-label {
+  transform: translateY(-120%);
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+/* Modern select dropdown */
+select.form-control {
+  background-image: none;
+  padding-right: 1.25rem;
+}
+
+/* =============== Updated Note Input Lines =============== */
+.note-lines {
+  position: absolute;
+  bottom: 15px;
+  left: 60px;
+  right: 20px;
+}
+
+.note-lines .line {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin-bottom: 4px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+body.dark-mode .note-lines .line {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* =============== Buttons =============== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  gap: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn i {
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.btn span {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-secondary {
+  background-color: var(--light);
+  color: var(--text-color);
+}
+
+body.dark-mode .btn-secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--dark-text);
+}
+
+.btn-secondary:hover {
+  background-color: #dfe4ea;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn-sparkles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.btn-primary:hover .sparkle {
+  animation: sparkle-pop 0.6s ease-out forwards;
+}
+
+@keyframes sparkle-pop {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(1);
+    opacity: 0;
+  }
+}
+
+.btn-primary:hover .sparkle:nth-child(1) {
+  --tx: -10px;
+  --ty: -10px;
+  width: 5px;
+  height: 5px;
+  top: 20%;
+  left: 20%;
+  animation-delay: 0.1s;
+}
+
+.btn-primary:hover .sparkle:nth-child(2) {
+  --tx: 10px;
+  --ty: -15px;
+  width: 3px;
+  height: 3px;
+  top: 30%;
+  left: 50%;
+  animation-delay: 0.2s;
+}
+
+.btn-primary:hover .sparkle:nth-child(3) {
+  --tx: -5px;
+  --ty: 5px;
+  width: 4px;
+  height: 4px;
+  top: 60%;
+  left: 30%;
+  animation-delay: 0.3s;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+/* =============== Updated Form Row Layout =============== */
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* =============== Responsive Styles =============== */
+@media (max-width: 768px) {
+  .transaction-card {
+    padding: 1.75rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-footer {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+
+/* Dropdown styles for light mode */
+select.form-control {
+  background-color: var(--white);
+  color: var(--text-color);
+  border: 2px solid var(--border-color);
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%232c3e50' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 12px;
+}
+
+/* Dropdown styles for dark mode */
+body.dark-mode select.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--light);
+  border-color: rgba(255, 255, 255, 0.2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ecf0f1' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+}
+
+/* Dropdown options styling */
+select.form-control option {
+  background-color: var(--white);
+  color: var(--text-color);
+}
+
+body.dark-mode select.form-control option {
+  background-color: var(--dark);
+  color: var(--light);
+}
+
+@media (max-width: 768px) {
+    /* Card Layout */
+    .transaction-card {
+        padding: 1.5rem;
+        margin: 1rem;
+        border-radius: 16px;
+        max-width: 100%;
+    }
+
+    /* Header - Keep coin animation in top-right */
+    .page-header {
+        margin-bottom: 1.5rem;
+        /* Keep flex row layout */
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .wallet-icon {
+        width: 50px;
+        height: 50px;
+        /* Keep in original position */
+        margin-top: 0;
+        align-self: auto;
+    }
+
+    /* Type Toggle - Keep side-by-side layout */
+    .type-toggle {
+        /* Maintain horizontal layout */
+        flex-direction: row;
+        padding: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .type-toggle-btn {
+        padding: 0.75rem;
+        /* Ensure equal width */
+        flex: 1;
+    }
+
+    /* Form Elements */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-control {
+        padding: 0.75rem 1rem;
+    }
+
+    .input-group-text {
+        padding: 0 1rem;
+    }
+
+    /* Form Layout */
+    .form-row {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    /* Buttons */
+    .form-footer {
+        flex-direction: column-reverse;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1rem;
+        width: 100%;
+    }
+
+    /* Special Inputs */
+    textarea.form-control {
+        min-height: 100px;
+    }
+
+    .note-lines {
+        left: 50px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Card Styling */
+    .transaction-card {
+        padding: 1.25rem;
+        margin: 0.5rem;
+        border-radius: 14px;
+    }
+
+    /* Header */
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    /* Type Toggle - Still side-by-side */
+    .type-toggle-btn {
+        font-size: 0.9rem;
+        padding: 0.65rem;
+    }
+
+    .toggle-icon {
+        width: 25px;
+        height: 25px;
+        font-size: 1rem;
+    }
+
+    /* Form Elements */
+    .form-label {
+        font-size: 0.8rem;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+        padding: 0.65rem 0.9rem;
+    }
+
+    .input-group-text {
+        padding: 0 0.9rem;
+        font-size: 0.9rem;
+    }
+
+    /* Buttons */
+    .btn {
+        font-size: 0.9rem;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .transaction-card {
+        padding: 1rem;
+    }
+
+    .form-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .form-row .form-group {
+        flex: 1 1 calc(50% - 0.75rem);
+    }
+}

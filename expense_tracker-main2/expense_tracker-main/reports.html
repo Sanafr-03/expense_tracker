@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Reports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/reports.css">
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Read "darkMode" setting from localStorage
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+
+  // Optionally, listen for changes from other tabs/pages (if you want sync)
+  window.addEventListener('storage', function(event) {
+    if (event.key === 'darkMode') {
+      if (event.newValue === 'true') {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    }
+  });
+});
+</script>
+
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="add.html" class="add-btn">+</a>
+        <a href="reports.html" class="nav-item reports active">
+            <i class="fas fa-chart-bar"></i>
+            <span>Reports</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="report-header">
+                <div class="creative-header">
+                    <h1 class="page-title">Financial Analytics Dashboard</h1>
+                </div>
+            </div>
+            <div class="report-actions">
+                <button class="export-btn" id="export-excel">
+                    <i class="fas fa-file-excel"></i> Export Report to Excel
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card card-pair">
+                <div class="card-header">
+                    <h2 class="card-title">Income vs Expenses</h2>
+                    <div class="time-period-selector">
+                        <button class="time-period-btn active" data-period="week">Weekly</button>
+                        <button class="time-period-btn" data-period="month">Monthly</button>
+                        <button class="time-period-btn" data-period="year">Yearly</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="incomeExpenseChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card card-pair">
+                <div class="card-header">
+                    <h2 class="card-title">Savings Progress</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="savingsAreaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid paired-charts">
+    <!-- Expense Distribution card -->
+    <div class="card card-pair">
+        <div class="card-header">
+            <h2 class="card-title">Expense Distribution</h2>
+        </div>
+        <div class="doughnut-chart-with-legend">
+            <div class="chart-container">
+                <canvas id="expensePieChart"></canvas>
+            </div>
+            <div class="custom-legend" id="expenseLegend"></div>
+        </div>
+    </div>
+
+    <!-- Income Sources card -->
+    <div class="card card-pair">
+        <div class="card-header">
+            <h2 class="card-title">Income Sources</h2>
+        </div>
+        <div class="doughnut-chart-with-legend">
+            <div class="chart-container">
+                <canvas id="incomeSourcesChart"></canvas>
+            </div>
+            <div class="custom-legend" id="incomeLegend"></div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    
+    <script>
+let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+function formatCurrency(amount) {
+    const currency = localStorage.getItem('currency') || 'INR';
+    const formatter = new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 2
+    });
+    return formatter.format(amount || 0);
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize elements
+    const exportExcelBtn = document.getElementById('export-excel');
+    const timePeriodBtns = document.querySelectorAll('.time-period-btn');
+    
+    // Initialize charts with animations
+    initChartsWithAnimations();
+    
+    // Event listeners
+    exportExcelBtn.addEventListener('click', exportToExcel);
+    
+    timePeriodBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            timePeriodBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            initChartsWithAnimations();
+        });
+    });
+});
+
+function initChartsWithAnimations() {
+    // Destroy existing charts if they exist
+    const chartIds = [
+        'incomeExpenseChart', 'expensePieChart', 'incomeSourcesChart',
+        'savingsAreaChart'
+    ];
+    
+    chartIds.forEach(id => destroyChartIfExists(id));
+
+    
+    // Get active period
+    const activePeriod = document.querySelector('.time-period-btn.active')?.dataset.period || 'month';
+    
+    // Create new charts with animations
+    setTimeout(() => createIncomeExpenseChart(activePeriod), 300);
+    setTimeout(() => createExpensePieChart(), 400);
+    setTimeout(() => createIncomeSourcesChart(), 500);
+    setTimeout(() => createSavingsAreaChart(), 600);
+}
+
+function getChartOptions(title, showLegend = true, chartType = 'bar') {
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+                display: showLegend,
+                labels: {
+                    usePointStyle: true,
+                    padding: 20,
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.dataset.label || '';
+                        const value = context.raw || 0;
+                        return `${label}: ${formatCurrency(value)}`;
+                    }
+                },
+                displayColors: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                titleFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    size: 12
+                },
+                padding: 12
+            }
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        }
+    };
+
+    // For doughnut charts, explicitly disable scales
+    if (chartType === 'doughnut') {
+        options.scales = {
+            x: {
+                display: false
+            },
+            y: {
+                display: false
+            }
+        };
+    } else {
+        // For other chart types, keep the scales
+        options.scales = {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    drawBorder: false,
+                    color: 'rgba(0, 0, 0, 0.05)'
+                },
+                ticks: {
+                    callback: function(value) {
+                        return formatCurrency(value);
+                    },
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                ticks: {
+                    font: {
+                        size: 12
+                    }
+                }
+            }
+        };
+    }
+
+    return options;
+}
+
+function getChartDataForPeriod(period) {
+    const now = new Date();
+    const labels = [];
+    const income = [];
+    const expenses = [];
+
+    if (period === 'week') {
+        const weekData = Array(7).fill(null).map(() => ({ income: 0, expense: 0 }));
+
+        transactions.forEach(t => {
+            const date = new Date(t.date);
+            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            if (diffDays >= 0 && diffDays < 7) {
+                const index = 6 - diffDays; // Sunday last
+                if (t.amount > 0) {
+                    weekData[index].income += t.amount;
+                } else {
+                    weekData[index].expense += Math.abs(t.amount);
+                }
+            }
+        });
+
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date(now);
+            date.setDate(now.getDate() - (6 - i));
+            const label = weekdays[date.getDay()];
+            labels.push(label);
+            income.push(weekData[i].income);
+            expenses.push(weekData[i].expense);
+        }
+    }
+
+    else if (period === 'month') {
+        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const dailyData = Array(daysInMonth).fill(null).map(() => ({ income: 0, expense: 0 }));
+
+        transactions.forEach(t => {
+            const date = new Date(t.date);
+            if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
+                const day = date.getDate() - 1;
+                if (t.amount > 0) dailyData[day].income += t.amount;
+                else dailyData[day].expense += Math.abs(t.amount);
+            }
+        });
+
+        for (let i = 0; i < daysInMonth; i++) {
+            labels.push((i + 1).toString());
+            income.push(dailyData[i].income);
+            expenses.push(dailyData[i].expense);
+        }
+    }
+
+    else if (period === 'year') {
+        const monthlyData = Array(12).fill(null).map(() => ({ income: 0, expense: 0 }));
+
+        transactions.forEach(t => {
+            const date = new Date(t.date);
+            if (date.getFullYear() === now.getFullYear()) {
+                const month = date.getMonth();
+                if (t.amount > 0) monthlyData[month].income += t.amount;
+                else monthlyData[month].expense += Math.abs(t.amount);
+            }
+        });
+
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        for (let i = 0; i < 12; i++) {
+            labels.push(months[i]);
+            income.push(monthlyData[i].income);
+            expenses.push(monthlyData[i].expense);
+        }
+    }
+
+    return { labels, income, expenses };
+}
+
+function destroyChartIfExists(chartId) {
+    const existingChart = Chart.getChart(chartId);
+    if (existingChart) {
+        existingChart.destroy();
+    }
+}
+
+
+function createIncomeSourcesChart() {
+    const ctx = document.getElementById('incomeSourcesChart').getContext('2d');
+    
+    // Group income by category
+    const incomeByCategory = {};
+    transactions
+        .filter(t => t.amount > 0)
+        .forEach(t => {
+            const category = t.category || 'Other Income';
+            incomeByCategory[category] = (incomeByCategory[category] || 0) + t.amount;
+        });
+    
+    const labels = Object.keys(incomeByCategory);
+    const data = Object.values(incomeByCategory);
+    
+    // If no income, show empty state
+    if (labels.length === 0) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['No Income Data'],
+                datasets: [{
+                    data: [1],
+                    backgroundColor: ['#f0f0f0'],
+                    borderWidth: 0
+                }]
+            },
+            options: getChartOptions('Income Sources', false, 'doughnut')
+        });
+        return;
+    }
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#1e3a8a', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'
+                ],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: getChartOptions('Income Sources', false, 'doughnut')
+    });
+
+    renderCustomLegend(
+    "incomeLegend",
+    labels,
+    [
+        '#1e3a8a', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'
+    ],
+    data
+);
+
+}
+
+function createExpensePieChart() {
+    const ctx = document.getElementById('expensePieChart').getContext('2d');
+    
+    // Group expenses by category
+    const expenseCategories = {};
+    transactions
+        .filter(t => t.amount < 0)
+        .forEach(t => {
+            const category = t.category || 'Other Expenses';
+            expenseCategories[category] = (expenseCategories[category] || 0) + Math.abs(t.amount);
+        });
+    
+    // Convert to arrays for Chart.js
+    const labels = Object.keys(expenseCategories);
+    const data = Object.values(expenseCategories);
+    
+    // If no expenses, show empty state
+    if (labels.length === 0) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['No Expense Data'],
+                datasets: [{
+                    data: [1],
+                    backgroundColor: ['#f0f0f0'],
+                    borderWidth: 0
+                }]
+            },
+            options: getChartOptions('Expense Distribution', false, 'doughnut')
+        });
+        return;
+    }
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#b7791f', '#d4a017', '#f6ad37', '#f8c471', '#fad7a0', '#fdebd0'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: getChartOptions('Expense Distribution', false, 'doughnut')
+    });
+    renderCustomLegend(
+    "expenseLegend",
+    labels,
+    [
+        '#b7791f', '#d4a017', '#f6ad37', '#f8c471', '#fad7a0', '#fdebd0'
+    ],
+    data
+);
+
+}
+
+function renderCustomLegend(containerId, labels, colors, amounts) {
+    const legend = document.getElementById(containerId);
+    legend.innerHTML = '';
+    labels.forEach((lbl, idx) => {
+        // Optionally show each category's amount in legend
+        const amountStr = amounts && amounts[idx] !== undefined ? `: ${formatCurrency(amounts[idx])}` : '';
+        const div = document.createElement('div');
+        div.className = 'legend-item';
+        div.innerHTML = `
+            <span class="legend-color-box" style="background:${colors[idx]}"></span>
+            <span>${lbl}${amountStr}</span>
+        `;
+        legend.appendChild(div);
+    });
+}
+
+
+function createSavingsAreaChart() {
+    const ctx = document.getElementById('savingsAreaChart').getContext('2d');
+    
+    if (transactions.length === 0) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['No Data'],
+                datasets: [{
+                    label: 'Savings',
+                    data: [0],
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: getChartOptions('Savings Progress', false)
+        });
+        return;
+    }
+    
+    // Calculate cumulative savings by month
+    const savingsByMonth = Array(12).fill(0);
+    let cumulativeSavings = 0;
+    
+    // First calculate monthly net (income - expenses)
+    const monthlyNet = Array(12).fill(0);
+    transactions.forEach(t => {
+        const date = new Date(t.date);
+        const month = date.getMonth();
+        monthlyNet[month] += t.amount; // income is positive, expenses negative
+    });
+    
+    // Then calculate cumulative savings
+    monthlyNet.forEach((net, month) => {
+        cumulativeSavings += net;
+        savingsByMonth[month] = cumulativeSavings;
+    });
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Savings',
+                data: savingsByMonth,
+                borderColor: 'rgba(16, 185, 129, 1)',
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: getChartOptions('Savings Progress', false)
+    });
+}
+
+function createIncomeExpenseChart(period) {
+    const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
+    const { labels, income, expenses } = getChartDataForPeriod(period);
+    
+    if (transactions.length === 0) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['No Data'],
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: [0],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Expenses',
+                        data: [0],
+                        backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                        borderColor: 'rgba(243, 156, 18, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: getChartOptions('Income vs Expenses')
+        });
+        return;
+    }
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Income',
+                    data: income,
+                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Expenses',
+                    data: expenses,
+                    backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                    borderColor: 'rgba(243, 156, 18, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: getChartOptions('Income vs Expenses')
+    });
+}
+
+
+
+function exportToExcel() {
+    if (transactions.length === 0) {
+        showNotification('No transactions to export!', 'error');
+        return;
+    }
+    
+    // Prepare data
+    const data = [
+        ["Date", "Description", "Category", "Amount", "Type"],
+        ...transactions.map(t => [
+            formatDate(t.date),
+            t.description || '',
+            t.category,
+            t.amount > 0 ? t.amount : -t.amount,
+            t.amount > 0 ? 'Income' : 'Expense'
+        ])
+    ];
+    
+    try {
+        // Create worksheet
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        // Create workbook
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+        
+        // Export to Excel file
+        XLSX.writeFile(wb, "expense_tracker_export.xlsx");
+        
+        // Show notification
+        showNotification('Export completed successfully!');
+    } catch (error) {
+        showNotification('Export failed: ' + error.message, 'error');
+    }
+}
+
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} notification-icon"></i>
+        ${message}
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Set active nav item
+document.querySelector(`.nav-item[href="${window.location.pathname.split('/').pop()}"]`).classList.add('active');
+if (window.location.pathname.includes('reports.html')) {
+    document.querySelector('.nav-item.reports').classList.add('active');
+}
+
+// Common settings
+const AppSettings = {
+    get currency() {
+        return localStorage.getItem('currency') || 'INR';
+    },
+    set currency(value) {
+        localStorage.setItem('currency', value);
+    },
+    applyGlobalSettings() {
+
+        // Update currency symbols if needed
+        document.querySelectorAll('.currency-symbol').forEach(el => {
+            el.textContent = this.getCurrencySymbol(this.currency);
+        });
+    },
+    getCurrencySymbol(currency) {
+        const symbols = {
+            INR: '₹',
+            USD: '$',
+            EUR: '€',
+            GBP: '£',
+            JPY: '¥'
+        };
+        return symbols[currency] || '';
+    }
+};
+
+// Apply on page load
+document.addEventListener('DOMContentLoaded', () => {
+    AppSettings.applyGlobalSettings();
+});
+
+// Listen for currency changes
+window.addEventListener('currencyChanged', (e) => {
+    // Update any displayed currency values
+    updateCurrencyDisplays();
+    // If you have charts, you might want to redraw them
+    if (typeof initChartsWithAnimations === 'function') {
+        initChartsWithAnimations();
+    }
+});
+
+function updateCurrencyDisplays() {
+    // Update any elements showing currency values
+    document.querySelectorAll('[data-currency]').forEach(el => {
+        const amount = parseFloat(el.dataset.currency) || 0;
+        el.textContent = formatCurrency(amount);
+    });
+}
+
+// Add this event listener
+window.addEventListener('fullReset', function() {
+    transactions = [];
+    initChartsWithAnimations(); // This will reset all charts
+});
+// Listen for dark mode changes
+window.addEventListener('darkModeChanged', (e) => {
+    document.body.classList.toggle('dark-mode', e.detail.isDarkMode);
+});
+
+// Apply dark mode on page load if it's enabled
+document.addEventListener('DOMContentLoaded', () => {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    document.body.classList.toggle('dark-mode', isDarkMode);
+});
+    </script>
+    
+</body>
+</html>
